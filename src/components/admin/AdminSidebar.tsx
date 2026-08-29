@@ -11,12 +11,14 @@ import {
   GraduationCap,
   FlaskConical,
   Award,
+  User,
   LogOut,
 } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Projects", href: "/admin/projects", icon: FolderKanban },
+    { label: "Profile", href: "/admin/profile", icon: User },
   { label: "Skills", href: "/admin/skills", icon: Wrench },
   { label: "Experience", href: "/admin/experience", icon: Briefcase },
   { label: "Education", href: "/admin/education", icon: GraduationCap },

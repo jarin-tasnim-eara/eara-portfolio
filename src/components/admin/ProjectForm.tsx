@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import { X, Loader2 } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 type ProjectFormData = {
   id?: string;
@@ -190,11 +191,11 @@ export default function ProjectForm({
         />
       </Field>
 
-      <Field label="Image URL">
-        <input
+      <Field label="Project Image">
+        <ImageUpload
+          folder="projects"
           value={form.image_url}
-          onChange={(e) => updateField("image_url", e.target.value)}
-          className="input"
+          onChange={(url) => updateField("image_url", url)}
         />
       </Field>
 
