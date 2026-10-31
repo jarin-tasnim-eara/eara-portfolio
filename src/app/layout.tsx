@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { createClient } from "@/lib/supabase-server";
+import { normalizeUrl } from "@/lib/url";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -20,11 +21,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: profile } = await supabase
+  const result = await supabase
     .from("profile")
     .select("github_url, linkedin_url, resume_url")
     .limit(1)
     .maybeSingle();
+
+  const profile = result.data;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -33,9 +36,9 @@ export default async function RootLayout({
       >
         <ThemeProvider>
           <Navbar
-            githubUrl={profile?.github_url}
-            linkedinUrl={profile?.linkedin_url}
-            resumeUrl={profile?.resume_url}
+            githubUrl={profile ? normalizeUrl(profile.github_url) : null}
+            linkedinUrl={profile ? normalizeUrl(profile.linkedin_url) : null}
+            resumeUrl={profile ? normalizeUrl(profile.resume_url) : null}
           />
           {children}
           <Footer />

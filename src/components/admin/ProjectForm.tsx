@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -17,6 +18,7 @@ type ProjectFormData = {
   live_url: string;
   featured: boolean;
   technologies: string[];
+  sort_order: number;
 };
 
 export default function ProjectForm({
@@ -37,6 +39,7 @@ export default function ProjectForm({
     live_url: initialData?.live_url ?? "",
     featured: initialData?.featured ?? false,
     technologies: initialData?.technologies ?? [],
+    sort_order: initialData?.sort_order ?? 0,
   });
 
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(isEditMode);
@@ -53,9 +56,11 @@ export default function ProjectForm({
 
   function addTechnology() {
     const trimmed = techInput.trim();
+
     if (trimmed && !form.technologies.includes(trimmed)) {
       updateField("technologies", [...form.technologies, trimmed]);
     }
+
     setTechInput("");
   }
 
@@ -137,6 +142,7 @@ export default function ProjectForm({
             className="input"
           />
         </Field>
+
         <Field label="Slug (URL)" required>
           <input
             value={form.slug}
@@ -150,7 +156,9 @@ export default function ProjectForm({
       <Field label="Short Description">
         <input
           value={form.short_description}
-          onChange={(e) => updateField("short_description", e.target.value)}
+          onChange={(e) =>
+            updateField("short_description", e.target.value)
+          }
           className="input"
         />
       </Field>
@@ -182,6 +190,7 @@ export default function ProjectForm({
             </span>
           ))}
         </div>
+
         <input
           value={techInput}
           onChange={(e) => setTechInput(e.target.value)}
@@ -207,6 +216,7 @@ export default function ProjectForm({
             className="input"
           />
         </Field>
+
         <Field label="Live URL">
           <input
             value={form.live_url}
@@ -215,6 +225,17 @@ export default function ProjectForm({
           />
         </Field>
       </div>
+
+      <Field label="Display Order (small number shows first)">
+        <input
+          type="number"
+          value={form.sort_order}
+          onChange={(e) =>
+            updateField("sort_order", Number(e.target.value))
+          }
+          className="input"
+        />
+      </Field>
 
       <label className="flex items-center gap-2 text-sm text-neutral-700">
         <input

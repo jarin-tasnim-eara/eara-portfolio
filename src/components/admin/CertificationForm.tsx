@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -15,9 +16,15 @@ type CertificationFormData = {
   image_url: string;
   description: string;
   type: string;
+  sort_order: number;
 };
 
-const TYPE_OPTIONS = ["certification", "workshop", "award", "achievement"];
+const TYPE_OPTIONS = [
+  "certification",
+  "workshop",
+  "award",
+  "achievement",
+];
 
 export default function CertificationForm({
   initialData,
@@ -35,6 +42,7 @@ export default function CertificationForm({
     image_url: initialData?.image_url ?? "",
     description: initialData?.description ?? "",
     type: initialData?.type ?? "certification",
+    sort_order: initialData?.sort_order ?? 0,
   });
 
   const [loading, setLoading] = useState(false);
@@ -97,6 +105,7 @@ export default function CertificationForm({
             className="input"
           />
         </Field>
+
         <Field label="Type" required>
           <select
             value={form.type}
@@ -120,6 +129,7 @@ export default function CertificationForm({
             className="input"
           />
         </Field>
+
         <Field label="Issue Date">
           <input
             type="date"
@@ -133,7 +143,9 @@ export default function CertificationForm({
       <Field label="Credential URL">
         <input
           value={form.credential_url}
-          onChange={(e) => updateField("credential_url", e.target.value)}
+          onChange={(e) =>
+            updateField("credential_url", e.target.value)
+          }
           className="input"
         />
       </Field>
@@ -143,6 +155,17 @@ export default function CertificationForm({
           folder="certifications"
           value={form.image_url}
           onChange={(url) => updateField("image_url", url)}
+        />
+      </Field>
+
+      <Field label="Display Order (small number shows first)">
+        <input
+          type="number"
+          value={form.sort_order}
+          onChange={(e) =>
+            updateField("sort_order", Number(e.target.value))
+          }
+          className="input"
         />
       </Field>
 

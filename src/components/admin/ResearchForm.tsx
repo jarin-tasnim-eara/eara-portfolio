@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -19,6 +20,7 @@ type ResearchFormData = {
   certificate_url: string;
   image_url: string;
   featured: boolean;
+  sort_order: number;
 };
 
 export default function ResearchForm({
@@ -40,6 +42,7 @@ export default function ResearchForm({
     certificate_url: initialData?.certificate_url ?? "",
     image_url: initialData?.image_url ?? "",
     featured: initialData?.featured ?? false,
+    sort_order: initialData?.sort_order ?? 0,
   });
 
   const [loading, setLoading] = useState(false);
@@ -115,11 +118,14 @@ export default function ResearchForm({
         <Field label="Publication Type">
           <input
             value={form.publication_type}
-            onChange={(e) => updateField("publication_type", e.target.value)}
+            onChange={(e) =>
+              updateField("publication_type", e.target.value)
+            }
             placeholder="e.g. Conference Poster"
             className="input"
           />
         </Field>
+
         <Field label="Conference / Event">
           <input
             value={form.conference}
@@ -135,10 +141,13 @@ export default function ResearchForm({
           <input
             type="date"
             value={form.publication_date}
-            onChange={(e) => updateField("publication_date", e.target.value)}
+            onChange={(e) =>
+              updateField("publication_date", e.target.value)
+            }
             className="input"
           />
         </Field>
+
         <Field label="Authors">
           <input
             value={form.authors}
@@ -169,6 +178,17 @@ export default function ResearchForm({
           folder="research"
           value={form.image_url}
           onChange={(url) => updateField("image_url", url)}
+        />
+      </Field>
+
+      <Field label="Display Order (small number shows first)">
+        <input
+          type="number"
+          value={form.sort_order}
+          onChange={(e) =>
+            updateField("sort_order", Number(e.target.value))
+          }
+          className="input"
         />
       </Field>
 

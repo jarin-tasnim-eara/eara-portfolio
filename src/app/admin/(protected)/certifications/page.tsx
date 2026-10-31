@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-server";
 import { Plus, Pencil } from "lucide-react";
@@ -6,10 +7,15 @@ import DeleteButton from "@/components/admin/DeleteButton";
 export default async function AdminCertificationsPage() {
   const supabase = await createClient();
 
-  const { data: certifications } = await supabase
+  const { data: certifications, error } = await supabase
     .from("certifications")
     .select("*")
+    .order("sort_order", { ascending: true })
     .order("issue_date", { ascending: false });
+
+  if (error) {
+    console.error("Certifications fetch error:", error.message);
+  }
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-10">
@@ -17,6 +23,7 @@ export default async function AdminCertificationsPage() {
         <h1 className="text-2xl font-bold text-neutral-900">
           Certifications
         </h1>
+
         <Link
           href="/admin/certifications/new"
           className="flex items-center gap-2 bg-neutral-900 text-white px-4 py-2 rounded-md text-sm hover:bg-neutral-700 transition"
@@ -43,8 +50,12 @@ export default async function AdminCertificationsPage() {
             >
               <div className="min-w-0">
                 <p className="font-medium text-neutral-900 truncate">
+                  <span className="text-neutral-400 mr-2">
+                    #{cert.sort_order ?? 0}
+                  </span>
                   {cert.title}
                 </p>
+
                 <p className="text-xs text-neutral-400 truncate">
                   {cert.issuer} · {cert.type}
                 </p>
@@ -57,7 +68,11 @@ export default async function AdminCertificationsPage() {
                 >
                   <Pencil className="w-4 h-4" />
                 </Link>
-                <DeleteButton table="certifications" id={cert.id} />
+
+                <DeleteButton
+                  table="certifications"
+                  id={cert.id}
+                />
               </div>
             </div>
           ))}

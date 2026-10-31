@@ -1,69 +1,115 @@
-import Image from "next/image";
+import { createClient } from "@/lib/supabase-server";
+import { normalizeUrl } from "@/lib/url";
+import Hero from "@/components/sections/Hero";
+import About from "@/components/sections/About";
+import Skills from "@/components/sections/Skills";
+import Projects from "@/components/sections/Projects";
+import Experience from "@/components/sections/Experience";
+import Education from "@/components/sections/Education";
+import Research from "@/components/sections/Research";
+import Certifications from "@/components/sections/Certifications";
+import Contact from "@/components/sections/Contact";
 
-export default function Home() {
+function logError(name: string, error: { message: string } | null) {
+  if (error) {
+    console.error("[" + name + "] " + error.message);
+  }
+}
+
+export default async function Home() {
+  const supabase = await createClient();
+
+  const profileResult = await supabase
+    .from("profile")
+    .select("*")
+    .limit(1)
+    .maybeSingle();
+
+  const skillsResult = await supabase
+    .from("skills")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  const projectsResult = await supabase
+    .from("projects")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  const experienceResult = await supabase
+    .from("experience")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("start_date", { ascending: false });
+
+  const educationResult = await supabase
+    .from("education")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("start_date", { ascending: false });
+
+  const researchResult = await supabase
+    .from("research")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("publication_date", { ascending: false });
+
+  const certificationsResult = await supabase
+    .from("certifications")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("issue_date", { ascending: false });
+
+  logError("profile", profileResult.error);
+  logError("skills", skillsResult.error);
+  logError("projects", projectsResult.error);
+  logError("experience", experienceResult.error);
+  logError("education", educationResult.error);
+  logError("research", researchResult.error);
+  logError("certifications", certificationsResult.error);
+
+  const profile = profileResult.data;
+  const skills = skillsResult.data;
+  const projects = projectsResult.data;
+  const experiences = experienceResult.data;
+  const education = educationResult.data;
+  const research = researchResult.data;
+  const certifications = certificationsResult.data;
+
+  const githubUrl = profile ? normalizeUrl(profile.github_url) : null;
+  const linkedinUrl = profile ? normalizeUrl(profile.linkedin_url) : null;
+  const resumeUrl = profile ? normalizeUrl(profile.resume_url) : null;
+  const email = profile ? profile.email : null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main>
+      <Hero
+        fullName={profile ? profile.full_name : "Your Name"}
+        title={profile ? profile.title : "Software Developer"}
+        shortIntro={profile ? profile.short_intro : null}
+        profileImageUrl={profile ? profile.profile_image_url : null}
+        githubUrl={githubUrl}
+        linkedinUrl={linkedinUrl}
+        email={email}
+      />
+      <About
+        aboutText={profile ? profile.about_text : null}
+        currentFocus={profile ? profile.current_focus : null}
+        careerDirection={profile ? profile.career_direction : null}
+      />
+      <Skills skills={skills ? skills : []} />
+      <Projects projects={projects ? projects : []} />
+      <Experience experiences={experiences ? experiences : []} />
+      <Education education={education ? education : []} />
+      <Research research={research ? research : []} />
+      <Certifications certifications={certifications ? certifications : []} />
+      <Contact
+        email={email}
+        githubUrl={githubUrl}
+        linkedinUrl={linkedinUrl}
+        resumeUrl={resumeUrl}
+      />
+    </main>
   );
 }
