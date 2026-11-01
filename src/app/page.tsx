@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { normalizeUrl } from "@/lib/url";
 import Hero from "@/components/sections/Hero";
+import Stats from "@/components/sections/Stats";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
@@ -80,6 +81,12 @@ export default async function Home() {
   const githubUrl = profile ? normalizeUrl(profile.github_url) : null;
   const linkedinUrl = profile ? normalizeUrl(profile.linkedin_url) : null;
   const resumeUrl = profile ? normalizeUrl(profile.resume_url) : null;
+  const googleScholarUrl = profile
+    ? normalizeUrl(profile.google_scholar_url)
+    : null;
+  const researchgateUrl = profile
+    ? normalizeUrl(profile.researchgate_url)
+    : null;
   const email = profile ? profile.email : null;
 
   return (
@@ -91,7 +98,15 @@ export default async function Home() {
         profileImageUrl={profile ? profile.profile_image_url : null}
         githubUrl={githubUrl}
         linkedinUrl={linkedinUrl}
-        email={email}
+        googleScholarUrl={googleScholarUrl}
+        researchgateUrl={researchgateUrl}
+        resumeUrl={resumeUrl}
+      />
+      <Stats
+        projects={projects ? projects.length : 0}
+        research={research ? research.length : 0}
+        certifications={certifications ? certifications.length : 0}
+        skills={skills ? skills.length : 0}
       />
       <About
         aboutText={profile ? profile.about_text : null}
@@ -109,6 +124,8 @@ export default async function Home() {
         githubUrl={githubUrl}
         linkedinUrl={linkedinUrl}
         resumeUrl={resumeUrl}
+        googleScholarUrl={googleScholarUrl}
+        researchgateUrl={researchgateUrl}
       />
     </main>
   );

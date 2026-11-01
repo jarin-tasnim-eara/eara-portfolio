@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import SocialIcons from "@/components/ui/SocialIcons";
 
 type HeroProps = {
   fullName: string;
@@ -12,131 +12,151 @@ type HeroProps = {
   profileImageUrl: string | null;
   githubUrl: string | null;
   linkedinUrl: string | null;
-  email: string | null;
+  googleScholarUrl: string | null;
+  researchgateUrl: string | null;
+  resumeUrl: string | null;
 };
 
 export default function Hero(props: HeroProps) {
-  const fullName = props.fullName;
-  const title = props.title;
-  const shortIntro = props.shortIntro;
-  const profileImageUrl = props.profileImageUrl;
-  const githubUrl = props.githubUrl;
-  const linkedinUrl = props.linkedinUrl;
-  const email = props.email;
+  const {
+    fullName,
+    title,
+    shortIntro,
+    profileImageUrl,
+    githubUrl,
+    linkedinUrl,
+    googleScholarUrl,
+    researchgateUrl,
+    resumeUrl,
+  } = props;
 
-  const mailtoHref = email ? "mailto:" + email : "";
+  const reduceMotion = useReducedMotion();
+
+  const initials = fullName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join("");
+
+  const floatAnimation = reduceMotion ? { y: 0 } : { y: [0, -12, 0] };
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-6 pt-20">
-      <div className="max-w-3xl mx-auto text-center">
-
-        {profileImageUrl && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="relative w-28 h-28 mx-auto mb-6 rounded-full overflow-hidden border border-neutral-200 dark:border-neutral-800"
-          >
-            <Image
-              src={profileImageUrl}
-              alt={fullName}
-              fill
-              className="object-cover"
-              priority
-            />
-          </motion.div>
-        )}
-
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-sm text-neutral-500 dark:text-neutral-400 mb-3"
-        >
-          Hi, I&apos;m
-        </motion.p>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white mb-3"
-        >
-          {fullName}
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-lg text-neutral-500 dark:text-neutral-400 mb-6"
-        >
-          {title}
-        </motion.p>
-
-        {shortIntro && (
+    <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 min-h-[calc(100vh-5rem)] flex items-center">
+      <div className="grid w-full items-center gap-12 md:grid-cols-[1.2fr_0.8fr]">
+        <div>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-neutral-600 dark:text-neutral-300 max-w-xl mx-auto mb-8"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-code text-xs tracking-widest text-sec-skills mb-4"
           >
-            {shortIntro}
+            HELLO, I&apos;M
           </motion.p>
-        )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="flex flex-wrap items-center justify-center gap-3"
-        >
-          <Link
-            href="#projects"
-            className="px-5 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-sm font-medium hover:opacity-90 transition"
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="font-heading text-5xl md:text-7xl font-bold leading-[1.05] text-ink"
           >
-            View Projects
-          </Link>
+            {fullName}
+          </motion.h1>
 
-          {email && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-5 font-heading text-lg md:text-xl text-sec-projects"
+          >
+            {title}
+          </motion.p>
+
+          {shortIntro && (
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-5 max-w-[52ch] text-[17px] leading-8 text-soft"
+            >
+              {shortIntro}
+            </motion.p>
+          )}
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="mt-8 flex flex-wrap items-center gap-3"
+          >
             <Link
-              href={mailtoHref}
-              className="px-5 py-2.5 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-md text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-900 transition"
+              href="#projects"
+              className="rounded-md bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-500"
+            >
+              View Projects
+            </Link>
+            <Link
+              href="#contact"
+              className="rounded-md border border-line bg-card px-5 py-2.5 text-sm font-medium text-ink transition hover:border-sec-skills"
             >
               Contact Me
             </Link>
-          )}
+            {resumeUrl && (
+              <Link
+                href={resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-soft transition hover:text-ink"
+              >
+                Download CV
+              </Link>
+            )}
+          </motion.div>
 
-          {githubUrl && (
-            <Link
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-md text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-900 transition"
-            >
-              GitHub
-            </Link>
-          )}
-
-          {linkedinUrl && (
-            <Link
-              href={linkedinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-md text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-900 transition"
-            >
-              LinkedIn
-            </Link>
-          )}
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mt-8"
+          >
+            <SocialIcons
+              githubUrl={githubUrl}
+              linkedinUrl={linkedinUrl}
+              googleScholarUrl={googleScholarUrl}
+              researchgateUrl={researchgateUrl}
+            />
+          </motion.div>
+        </div>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="mt-16"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mx-auto w-full max-w-xs"
         >
-          <ArrowDown className="w-4 h-4 mx-auto text-neutral-400 animate-bounce" />
+          <motion.div
+            animate={floatAnimation}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="relative"
+          >
+            <div className="absolute -inset-3 rounded-[2rem] border border-sec-projects opacity-40" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-card">
+              {profileImageUrl ? (
+                <Image
+                  src={profileImageUrl}
+                  alt={fullName}
+                  fill
+                  sizes="320px"
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center font-heading text-6xl font-bold text-sec-projects">
+                  {initials}
+                </div>
+              )}
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

@@ -1,13 +1,30 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import AuroraBackground from "@/components/layout/AuroraBackground";
 import { createClient } from "@/lib/supabase-server";
 import { normalizeUrl } from "@/lib/url";
 
-const geist = Geist({ subsets: ["latin"] });
+const bodyFont = Inter({
+  subsets: ["latin"],
+  variable: "--nf-body",
+  display: "swap",
+});
+
+const headingFont = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--nf-heading",
+  display: "swap",
+});
+
+const codeFont = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--nf-code",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Jarin Tasnim Eara — Software Developer",
@@ -32,9 +49,10 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geist.className} bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100`}
+        className={`${bodyFont.variable} ${headingFont.variable} ${codeFont.variable} font-sans bg-page text-ink antialiased min-h-screen`}
       >
         <ThemeProvider>
+          <AuroraBackground />
           <Navbar
             githubUrl={profile ? normalizeUrl(profile.github_url) : null}
             linkedinUrl={profile ? normalizeUrl(profile.linkedin_url) : null}

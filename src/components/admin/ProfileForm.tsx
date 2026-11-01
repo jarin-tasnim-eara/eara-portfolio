@@ -20,6 +20,8 @@ type ProfileFormData = {
   github_url: string;
   resume_url: string;
   profile_image_url: string;
+  google_scholar_url: string;
+researchgate_url: string;
 };
 
 export default function ProfileForm({
@@ -41,6 +43,8 @@ export default function ProfileForm({
     github_url: initialData?.github_url ?? "",
     resume_url: initialData?.resume_url ?? "",
     profile_image_url: initialData?.profile_image_url ?? "",
+    google_scholar_url: initialData?.google_scholar_url ?? "",
+researchgate_url: initialData?.researchgate_url ?? "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -177,6 +181,24 @@ export default function ProfileForm({
           />
         </Field>
       </div>
+
+
+      <div className="grid grid-cols-2 gap-4">
+  <Field label="Google Scholar URL">
+    <input
+      value={form.google_scholar_url}
+      onChange={(e) => updateField("google_scholar_url", e.target.value)}
+      className="input"
+    />
+  </Field>
+  <Field label="ResearchGate URL">
+    <input
+      value={form.researchgate_url}
+      onChange={(e) => updateField("researchgate_url", e.target.value)}
+      className="input"
+    />
+  </Field>
+</div>
 
       <Field label="Profile Image">
         <ImageUpload
