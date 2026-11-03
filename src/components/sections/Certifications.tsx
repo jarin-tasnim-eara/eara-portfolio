@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
+import ShowMoreGrid from "@/components/ui/ShowMoreGrid";
+import { normalizeUrl } from "@/lib/url";
 
 type CertificationItem = {
   id: string;
@@ -13,7 +15,7 @@ type CertificationItem = {
   credential_url: string | null;
   image_url: string | null;
   description: string | null;
-  type: string;
+  type: string | null;
 };
 
 function formatDate(dateStr: string | null): string {
@@ -22,8 +24,8 @@ function formatDate(dateStr: string | null): string {
   return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 }
 
-function typeLabel(type: string): string {
-  if (type.length === 0) return "Certification";
+function typeLabel(type: string | null): string {
+  if (!type || type.length === 0) return "Certification";
   return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
@@ -34,78 +36,85 @@ export default function Certifications(props: {
 
   if (certifications.length === 0) return null;
 
+  const items = certifications.map((cert) => {
+    const credentialHref = normalizeUrl(cert.credential_url);
+
+    return (
+      <div
+        key={cert.id}
+        className="flex h-full gap-4 rounded-xl border border-line bg-card p-5 transition hover:-translate-y-1 hover:border-sec-awards"
+      >
+        {cert.image_url && (
+          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-page">
+            <Image
+              src={cert.image_url}
+              alt={cert.title}
+              fill
+              sizes="64px"
+              className="object-cover"
+            />
+          </div>
+        )}
+
+        <div className="min-w-0 flex-1">
+          <span className="mb-2 inline-block rounded-full border border-sec-awards px-2 py-0.5 font-code text-[10px] uppercase tracking-wider text-sec-awards">
+            {typeLabel(cert.type)}
+          </span>
+
+          <h3 className="font-heading text-sm font-bold text-ink">
+            {cert.title}
+          </h3>
+
+          <p className="mt-1 text-xs text-soft">
+            {cert.issuer}
+            {cert.issue_date ? " · " + formatDate(cert.issue_date) : ""}
+          </p>
+
+          {cert.description && (
+            <p className="mt-2 text-xs leading-5 text-soft">
+              {cert.description}
+            </p>
+          )}
+
+          {credentialHref && (
+            <Link
+              href={credentialHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-sec-awards hover:underline"
+            >
+              <ExternalLink className="h-3 w-3" />
+              View credential
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  });
+
   return (
-    <section id="certifications" className="max-w-4xl mx-auto px-6 py-20">
-      <motion.h2
+    <section id="certifications" className="max-w-6xl mx-auto px-6 py-20">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="text-2xl font-bold text-neutral-900 dark:text-white mb-10"
+        className="mb-10"
       >
-        Certifications & Achievements
-      </motion.h2>
+        <p className="font-code text-xs tracking-widest text-sec-awards mb-3">
+          06 / CERTIFICATIONS
+        </p>
+        <h2 className="font-heading text-3xl font-bold text-ink">
+          Certifications &amp; Achievements
+        </h2>
+        <div className="mt-3 h-1 w-10 rounded-full bg-sec-awards" />
+      </motion.div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
-        {certifications.map((cert, index) => {
-          const delayValue = (index % 2) * 0.1;
-
-          return (
-            <motion.div
-              key={cert.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: delayValue }}
-              className="border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 flex gap-4"
-            >
-              {cert.image_url && (
-                <div className="relative w-16 h-16 shrink-0 rounded-md overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-                  <Image
-                    src={cert.image_url}
-                    alt={cert.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
-
-              <div className="flex-1 min-w-0">
-                <span className="inline-block text-xs px-2 py-0.5 bg-neutral-100 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-400 rounded-full mb-2">
-                  {typeLabel(cert.type)}
-                </span>
-
-                <h3 className="font-semibold text-neutral-900 dark:text-white text-sm">
-                  {cert.title}
-                </h3>
-
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-                  {cert.issuer}
-                  {cert.issue_date ? " · " + formatDate(cert.issue_date) : ""}
-                </p>
-
-                {cert.description && (
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2 leading-relaxed">
-                    {cert.description}
-                  </p>
-                )}
-
-                {cert.credential_url && (
-                  <Link
-                    href={cert.credential_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:underline mt-3"
-                  >
-                    <ExternalLink className="w-3 h-3" />
-                    View Credential
-                  </Link>
-                )}
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
+      <ShowMoreGrid
+        items={items}
+        gridClassName="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        buttonClassName="rounded-full border border-sec-awards bg-card px-6 py-2.5 text-sm font-medium text-ink transition hover:bg-sec-awards hover:text-white"
+      />
     </section>
   );
 }

@@ -8,22 +8,24 @@ type AboutProps = {
   careerDirection: string | null;
 };
 
-export default function About({
-  aboutText,
-  currentFocus,
-  careerDirection,
-}: AboutProps) {
+export default function About(props: AboutProps) {
+  const { aboutText, currentFocus, careerDirection } = props;
+
   return (
     <section id="about" className="max-w-3xl mx-auto px-6 py-20">
-      <motion.h2
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="text-2xl font-bold text-neutral-900 dark:text-white mb-8"
+        className="mb-8"
       >
-        About Me
-      </motion.h2>
+        <p className="font-code text-xs tracking-widest text-sec-about mb-3">
+          00 / ABOUT
+        </p>
+        <h2 className="font-heading text-3xl font-bold text-ink">About Me</h2>
+        <div className="mt-3 h-1 w-10 rounded-full bg-sec-about" />
+      </motion.div>
 
       {aboutText && (
         <motion.p
@@ -31,7 +33,7 @@ export default function About({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-neutral-600 dark:text-neutral-300 leading-relaxed mb-8"
+          className="text-soft text-[17px] leading-8 max-w-[68ch] mb-10"
         >
           {aboutText}
         </motion.p>
@@ -44,14 +46,12 @@ export default function About({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="border border-neutral-200 dark:border-neutral-800 rounded-lg p-5"
+            className="bg-card border border-line rounded-xl p-6"
           >
-            <p className="text-xs uppercase tracking-wide text-neutral-400 mb-2">
-              Currently Focused On
+            <p className="font-code text-xs tracking-widest uppercase text-sec-about mb-3">
+              Currently focused on
             </p>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300">
-              {currentFocus}
-            </p>
+            <p className="text-soft text-[15px] leading-7">{currentFocus}</p>
           </motion.div>
         )}
 
@@ -61,12 +61,12 @@ export default function About({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="border border-neutral-200 dark:border-neutral-800 rounded-lg p-5"
+            className="bg-card border border-line rounded-xl p-6"
           >
-            <p className="text-xs uppercase tracking-wide text-neutral-400 mb-2">
-              Career Direction
+            <p className="font-code text-xs tracking-widest uppercase text-sec-about mb-3">
+              Career direction
             </p>
-            <p className="text-sm text-neutral-700 dark:text-neutral-300">
+            <p className="text-soft text-[15px] leading-7">
               {careerDirection}
             </p>
           </motion.div>

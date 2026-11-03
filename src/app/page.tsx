@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase-server";
 import { normalizeUrl } from "@/lib/url";
 import Hero from "@/components/sections/Hero";
-import Stats from "@/components/sections/Stats";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
@@ -102,12 +101,7 @@ export default async function Home() {
         researchgateUrl={researchgateUrl}
         resumeUrl={resumeUrl}
       />
-      <Stats
-        projects={projects ? projects.length : 0}
-        research={research ? research.length : 0}
-        certifications={certifications ? certifications.length : 0}
-        skills={skills ? skills.length : 0}
-      />
+     
       <About
         aboutText={profile ? profile.about_text : null}
         currentFocus={profile ? profile.current_focus : null}

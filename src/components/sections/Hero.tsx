@@ -40,6 +40,7 @@ export default function Hero(props: HeroProps) {
     .join("");
 
   const floatAnimation = reduceMotion ? { y: 0 } : { y: [0, -12, 0] };
+  const spinAnimation = reduceMotion ? { rotate: 0 } : { rotate: 360 };
 
   return (
     <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 min-h-[calc(100vh-5rem)] flex items-center">
@@ -132,22 +133,28 @@ export default function Hero(props: HeroProps) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mx-auto w-full max-w-xs"
+          className="mx-auto"
         >
           <motion.div
             animate={floatAnimation}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="relative"
+            className="relative h-64 w-64 md:h-80 md:w-80"
           >
-            <div className="absolute -inset-3 rounded-[2rem] border border-sec-projects opacity-40" />
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-card">
+            <motion.div
+              aria-hidden="true"
+              animate={spinAnimation}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-6 rounded-full border border-dashed border-sec-skills opacity-40"
+            />
+            <div className="absolute -inset-3 rounded-full border border-sec-projects opacity-40" />
+            <div className="relative h-full w-full overflow-hidden rounded-full border border-line bg-card">
               {profileImageUrl ? (
                 <Image
                   src={profileImageUrl}
                   alt={fullName}
                   fill
                   sizes="320px"
-                  className="object-cover"
+                  className="object-cover object-top"
                   priority
                 />
               ) : (

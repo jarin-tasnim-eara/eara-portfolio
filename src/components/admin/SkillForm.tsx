@@ -4,13 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 import { Loader2 } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 type SkillFormData = {
   id?: string;
   name: string;
   category: string;
   icon: string;
-  proficiency: number;
+  is_core: boolean;
   sort_order: number;
 };
 
@@ -26,7 +27,7 @@ export default function SkillForm({
     name: initialData?.name ?? "",
     category: initialData?.category ?? "",
     icon: initialData?.icon ?? "",
-    proficiency: initialData?.proficiency ?? 0,
+    is_core: initialData?.is_core ?? false,
     sort_order: initialData?.sort_order ?? 0,
   });
 
@@ -90,45 +91,38 @@ export default function SkillForm({
             value={form.category}
             onChange={(e) => updateField("category", e.target.value)}
             required
-            placeholder="e.g. Frontend"
+            placeholder="e.g. Languages"
             className="input"
           />
         </Field>
       </div>
 
-      <Field label="Icon (Lucide icon name)">
-        <input
+      <Field label="Logo (optional, PNG or SVG)">
+        <ImageUpload
+          folder="skills"
           value={form.icon}
-          onChange={(e) => updateField("icon", e.target.value)}
-          placeholder="e.g. Code2"
-          className="input"
+          onChange={(url) => updateField("icon", url)}
         />
       </Field>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Field label="Proficiency (0-100)">
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={form.proficiency}
-            onChange={(e) =>
-              updateField("proficiency", Number(e.target.value))
-            }
-            className="input"
-          />
-        </Field>
-        <Field label="Sort Order">
-          <input
-            type="number"
-            value={form.sort_order}
-            onChange={(e) =>
-              updateField("sort_order", Number(e.target.value))
-            }
-            className="input"
-          />
-        </Field>
-      </div>
+      <label className="flex items-center gap-2 text-sm text-neutral-700">
+        <input
+          type="checkbox"
+          checked={form.is_core}
+          onChange={(e) => updateField("is_core", e.target.checked)}
+          className="w-4 h-4"
+        />
+        Core skill (shows in the Core Stack row)
+      </label>
+
+      <Field label="Display Order (small number shows first)">
+        <input
+          type="number"
+          value={form.sort_order}
+          onChange={(e) => updateField("sort_order", Number(e.target.value))}
+          className="input"
+        />
+      </Field>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
