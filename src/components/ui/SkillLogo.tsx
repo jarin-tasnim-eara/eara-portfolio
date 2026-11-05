@@ -33,7 +33,7 @@ function initialsFor(name: string): string {
     return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
   }
 
-  return cleaned.charAt(0).toUpperCase() + cleaned.charAt(1).toLowerCase();
+  return cleaned.slice(0, 2).toUpperCase();
 }
 
 export default function SkillLogo(props: SkillLogoProps) {

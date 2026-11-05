@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { FileText, Award } from "lucide-react";
+import { normalizeUrl } from "@/lib/url";
 
 type ResearchItem = {
   id: string;
@@ -14,7 +16,8 @@ type ResearchItem = {
   authors: string | null;
   paper_url: string | null;
   certificate_url: string | null;
-  featured: boolean;
+  image_url: string | null;
+  featured: boolean | null;
 };
 
 function formatDate(dateStr: string | null): string {
@@ -29,20 +32,36 @@ export default function Research(props: { research: ResearchItem[] }) {
   if (research.length === 0) return null;
 
   return (
-    <section id="research" className="max-w-3xl mx-auto px-6 py-20">
-      <motion.h2
+    <section id="research" className="max-w-4xl mx-auto px-6 py-20">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="text-2xl font-bold text-neutral-900 dark:text-white mb-10"
+        className="mb-10"
       >
-        Research & Publications
-      </motion.h2>
+        <p className="font-code text-xs tracking-widest text-sec-research mb-3">
+          RESEARCH
+        </p>
+        <h2 className="font-heading text-3xl font-bold text-ink">
+          Research &amp; Publications
+        </h2>
+        <div className="mt-3 h-1 w-10 rounded-full bg-sec-research" />
+      </motion.div>
 
-      <div className="space-y-5">
+      <div className="space-y-6">
         {research.map((item, index) => {
-          const delayValue = index * 0.1;
+          const paperHref = normalizeUrl(item.paper_url);
+          const certificateHref = normalizeUrl(item.certificate_url);
+          const cardClass = item.featured
+            ? "overflow-hidden rounded-xl border border-sec-research bg-card transition"
+            : "overflow-hidden rounded-xl border border-line bg-card transition hover:border-sec-research";
+          const meta = [item.publication_type, item.conference]
+            .filter(Boolean)
+            .join(" · ");
+          const byline = [formatDate(item.publication_date), item.authors]
+            .filter(Boolean)
+            .join(" · ");
 
           return (
             <motion.div
@@ -50,60 +69,67 @@ export default function Research(props: { research: ResearchItem[] }) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: delayValue }}
-              className={
-                item.featured
-                  ? "border border-neutral-300 dark:border-neutral-700 rounded-xl p-5 bg-neutral-50 dark:bg-neutral-900/50"
-                  : "border border-neutral-200 dark:border-neutral-800 rounded-xl p-5"
-              }
+              transition={{ duration: 0.5, delay: index * 0.08 }}
+              className={cardClass}
             >
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <h3 className="font-semibold text-neutral-900 dark:text-white">
-                  {item.title}
-                </h3>
-                {item.featured && (
-                  <Award className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
-                )}
-              </div>
-
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-1">
-                {item.publication_type}
-                {item.conference ? " · " + item.conference : ""}
-              </p>
-
-              <p className="text-xs text-neutral-400 mb-3">
-                {formatDate(item.publication_date)}
-                {item.authors ? " · " + item.authors : ""}
-              </p>
-
-              {item.description && (
-                <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-3">
-                  {item.description}
-                </p>
+              {item.image_url && (
+                <div className="relative h-52 w-full bg-page">
+                  <Image
+                    src={item.image_url}
+                    alt={item.title}
+                    fill
+                    sizes="(min-width: 896px) 896px, 100vw"
+                    className="object-cover"
+                  />
+                </div>
               )}
 
-              <div className="flex items-center gap-4">
-                {item.paper_url && (
-                  <Link
-                    href={item.paper_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:underline"
-                  >
-                    <FileText className="w-4 h-4" />
-                    Paper
-                  </Link>
+              <div className="p-6">
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="font-heading text-lg font-bold text-ink">
+                    {item.title}
+                  </h3>
+                  {item.featured && (
+                    <span className="shrink-0 rounded-full border border-sec-research px-2.5 py-0.5 font-code text-[10px] uppercase tracking-wider text-sec-research">
+                      Featured
+                    </span>
+                  )}
+                </div>
+
+                {meta && <p className="mt-2 text-sm text-sec-research">{meta}</p>}
+                {byline && <p className="mt-1 text-xs text-soft">{byline}</p>}
+
+                {item.description && (
+                  <p className="mt-4 text-[15px] leading-7 text-soft">
+                    {item.description}
+                  </p>
                 )}
-                {item.certificate_url && (
-                  <Link
-                    href={item.certificate_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:underline"
-                  >
-                    <Award className="w-4 h-4" />
-                    Certificate
-                  </Link>
+
+                {(paperHref || certificateHref) && (
+                  <div className="mt-5 flex flex-wrap items-center gap-5">
+                    {paperHref && (
+                      <Link
+                        href={paperHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-sec-research hover:underline"
+                      >
+                        <FileText className="h-4 w-4" />
+                        Paper
+                      </Link>
+                    )}
+                    {certificateHref && (
+                      <Link
+                        href={certificateHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-sec-research hover:underline"
+                      >
+                        <Award className="h-4 w-4" />
+                        Certificate
+                      </Link>
+                    )}
+                  </div>
                 )}
               </div>
             </motion.div>

@@ -40,11 +40,23 @@ export default async function RootLayout({
   const supabase = await createClient();
   const result = await supabase
     .from("profile")
-    .select("github_url, linkedin_url, resume_url")
+    .select(
+      "full_name, github_url, linkedin_url, resume_url, google_scholar_url, researchgate_url"
+    )
     .limit(1)
     .maybeSingle();
 
   const profile = result.data;
+
+  const githubUrl = profile ? normalizeUrl(profile.github_url) : null;
+  const linkedinUrl = profile ? normalizeUrl(profile.linkedin_url) : null;
+  const resumeUrl = profile ? normalizeUrl(profile.resume_url) : null;
+  const googleScholarUrl = profile
+    ? normalizeUrl(profile.google_scholar_url)
+    : null;
+  const researchgateUrl = profile
+    ? normalizeUrl(profile.researchgate_url)
+    : null;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -54,12 +66,18 @@ export default async function RootLayout({
         <ThemeProvider>
           <AuroraBackground />
           <Navbar
-            githubUrl={profile ? normalizeUrl(profile.github_url) : null}
-            linkedinUrl={profile ? normalizeUrl(profile.linkedin_url) : null}
-            resumeUrl={profile ? normalizeUrl(profile.resume_url) : null}
+            githubUrl={githubUrl}
+            linkedinUrl={linkedinUrl}
+            resumeUrl={resumeUrl}
           />
           {children}
-          <Footer />
+          <Footer
+            fullName={profile ? profile.full_name : null}
+            githubUrl={githubUrl}
+            linkedinUrl={linkedinUrl}
+            googleScholarUrl={googleScholarUrl}
+            researchgateUrl={researchgateUrl}
+          />
         </ThemeProvider>
       </body>
     </html>

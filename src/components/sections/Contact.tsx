@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Copy, Check } from "lucide-react";
+import SocialIcons from "@/components/ui/SocialIcons";
 
 type ContactProps = {
   email: string | null;
@@ -15,7 +16,7 @@ type ContactProps = {
 };
 
 const outlineClass =
-  "px-5 py-2.5 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-md text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-900 transition";
+  "rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-sec-about";
 
 export default function Contact(props: ContactProps) {
   const {
@@ -58,35 +59,40 @@ export default function Contact(props: ContactProps) {
     : "";
 
   return (
-    <section id="contact" className="max-w-3xl mx-auto px-6 py-20 text-center">
+    <section id="contact" className="max-w-4xl mx-auto px-6 py-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
+        className="rounded-2xl border border-line bg-card p-8 text-center sm:p-12"
       >
-        <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4">
-          Get In Touch
+        <p className="font-code text-xs tracking-widest text-sec-about mb-3">
+          CONTACT
+        </p>
+        <h2 className="font-heading text-3xl font-bold text-ink">
+          Get in touch
         </h2>
-        <p className="text-neutral-500 dark:text-neutral-400 max-w-xl mx-auto mb-8">
+        <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-sec-about" />
+        <p className="mx-auto mt-6 max-w-md text-soft">
           Have a question or an opportunity in mind? Feel free to reach out.
         </p>
 
         {email && (
-          <div className="flex flex-col items-center gap-4 mb-8">
-            <p className="text-lg font-medium text-neutral-900 dark:text-white select-all">
+          <div className="mt-8 flex flex-col items-center gap-5">
+            <p className="select-all font-heading text-xl font-medium text-ink">
               {email}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <button
                 type="button"
                 onClick={copyEmail}
-                className="flex items-center gap-2 px-5 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-sm font-medium hover:opacity-90 transition"
+                className="flex items-center gap-2 rounded-md bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-500"
               >
                 {copied ? (
-                  <Check className="w-4 h-4" />
+                  <Check className="h-4 w-4" />
                 ) : (
-                  <Copy className="w-4 h-4" />
+                  <Copy className="h-4 w-4" />
                 )}
                 {copied ? "Copied" : "Copy email"}
               </button>
@@ -105,55 +111,21 @@ export default function Contact(props: ContactProps) {
           </div>
         )}
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          {linkedinUrl && (
-            <Link
-              href={linkedinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={outlineClass}
-            >
-              LinkedIn
-            </Link>
-          )}
-          {githubUrl && (
-            <Link
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={outlineClass}
-            >
-              GitHub
-            </Link>
-          )}
-          {googleScholarUrl && (
-            <Link
-              href={googleScholarUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={outlineClass}
-            >
-              Google Scholar
-            </Link>
-          )}
-          {researchgateUrl && (
-            <Link
-              href={researchgateUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={outlineClass}
-            >
-              ResearchGate
-            </Link>
-          )}
+        <div className="mt-10 flex flex-col items-center gap-5 border-t border-line pt-8">
+          <SocialIcons
+            githubUrl={githubUrl}
+            linkedinUrl={linkedinUrl}
+            googleScholarUrl={googleScholarUrl}
+            researchgateUrl={researchgateUrl}
+          />
           {resumeUrl && (
             <Link
               href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={outlineClass}
+              className="text-sm font-medium text-sec-about hover:underline"
             >
-              Download CV
+              Download CV →
             </Link>
           )}
         </div>

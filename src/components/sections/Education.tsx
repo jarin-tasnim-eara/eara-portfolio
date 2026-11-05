@@ -18,55 +18,67 @@ function formatYear(dateStr: string | null): string {
   return new Date(dateStr).getFullYear().toString();
 }
 
-export default function Education({
-  education,
-}: {
-  education: EducationItem[];
-}) {
+function periodFor(start: string | null, end: string | null): string {
+  const startYear = formatYear(start);
+  const endYear = formatYear(end);
+
+  if (startYear && endYear) return startYear + " — " + endYear;
+  if (startYear) return startYear + " — Present";
+  return endYear;
+}
+
+export default function Education(props: { education: EducationItem[] }) {
+  const education = props.education;
+
   if (education.length === 0) return null;
 
   return (
-    <section id="education" className="max-w-3xl mx-auto px-6 py-20">
-      <motion.h2
+    <section id="education" className="max-w-4xl mx-auto px-6 py-20">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="text-2xl font-bold text-neutral-900 dark:text-white mb-10"
+        className="mb-10"
       >
-        Education
-      </motion.h2>
+        <p className="font-code text-xs tracking-widest text-sec-education mb-3">
+          EDUCATION
+        </p>
+        <h2 className="font-heading text-3xl font-bold text-ink">Education</h2>
+        <div className="mt-3 h-1 w-10 rounded-full bg-sec-education" />
+      </motion.div>
 
-      <div className="space-y-6">
+      <div className="space-y-5">
         {education.map((edu, index) => (
           <motion.div
             key={edu.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 border-b border-neutral-100 dark:border-neutral-900 pb-6 last:border-0"
+            transition={{ duration: 0.5, delay: index * 0.08 }}
+            className="grid gap-3 rounded-xl border border-line bg-card p-6 transition hover:border-sec-education sm:grid-cols-[9rem_1fr]"
           >
-            <span className="text-sm text-neutral-400 shrink-0 sm:w-28">
-              {formatYear(edu.start_date)}
-              {edu.end_date ? ` — ${formatYear(edu.end_date)}` : ""}
-            </span>
+            <p className="font-code text-sm text-sec-education">
+              {periodFor(edu.start_date, edu.end_date)}
+            </p>
 
             <div>
-              <h3 className="font-semibold text-neutral-900 dark:text-white">
+              <h3 className="font-heading text-lg font-bold text-ink">
                 {edu.degree}
               </h3>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">
+              <p className="mt-1 text-sm text-soft">
                 {edu.institution}
-                {edu.location && ` · ${edu.location}`}
+                {edu.location ? " · " + edu.location : ""}
               </p>
+
               {edu.result && (
-                <p className="text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+                <span className="mt-3 inline-block rounded-full border border-sec-education px-3 py-0.5 text-xs text-sec-education">
                   {edu.result}
-                </p>
+                </span>
               )}
+
               {edu.description && (
-                <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-2 leading-relaxed">
+                <p className="mt-3 text-[15px] leading-7 text-soft">
                   {edu.description}
                 </p>
               )}

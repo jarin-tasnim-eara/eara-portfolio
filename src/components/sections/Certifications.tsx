@@ -102,7 +102,7 @@ export default function Certifications(props: {
         className="mb-10"
       >
         <p className="font-code text-xs tracking-widest text-sec-awards mb-3">
-          06 / CERTIFICATIONS
+         CERTIFICATIONS
         </p>
         <h2 className="font-heading text-3xl font-bold text-ink">
           Certifications &amp; Achievements

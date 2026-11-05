@@ -25,7 +25,7 @@ export default function Projects(props: { projects: ProjectItem[] }) {
         className="mb-10"
       >
         <p className="font-code text-xs tracking-widest text-sec-projects mb-3">
-          02 / PROJECTS
+          PROJECTS
         </p>
         <h2 className="font-heading text-3xl font-bold text-ink">Projects</h2>
         <div className="mt-3 h-1 w-10 rounded-full bg-sec-projects" />

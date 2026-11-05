@@ -2,7 +2,9 @@ import { createClient } from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, ArrowLeft } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import { normalizeUrl } from "@/lib/url";
 
 export default async function ProjectDetailPage(props: {
   params: Promise<{ slug: string }>;
@@ -24,68 +26,69 @@ export default async function ProjectDetailPage(props: {
     notFound();
   }
 
+  const technologies: string[] = project.technologies
+    ? project.technologies
+    : [];
+  const githubHref = normalizeUrl(project.github_url);
+  const liveHref = normalizeUrl(project.live_url);
+
   return (
-    <main className="max-w-3xl mx-auto px-6 py-16">
+    <main className="max-w-4xl mx-auto px-6 py-16">
       <Link
         href="/#projects"
-        className="inline-flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition mb-8"
+        className="mb-8 inline-flex items-center gap-2 text-sm text-soft transition hover:text-ink"
       >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Projects
+        <ArrowLeft className="h-4 w-4" />
+        Back to projects
       </Link>
 
-      {project.image_url && (
-        <div className="relative w-full h-64 sm:h-80 rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 mb-8">
-          <Image
-            src={project.image_url}
-            alt={project.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
-
-      <h1 className="text-3xl font-bold text-neutral-900 dark:text-white mb-3">
+      <p className="font-code text-xs tracking-widest text-sec-projects mb-3">
+        PROJECT
+      </p>
+      <h1 className="font-heading text-4xl font-bold leading-tight text-ink md:text-5xl">
         {project.title}
       </h1>
+      <div className="mt-4 h-1 w-10 rounded-full bg-sec-projects" />
 
       {project.short_description && (
-        <p className="text-lg text-neutral-500 dark:text-neutral-400 mb-6">
+        <p className="mt-6 max-w-[60ch] text-lg leading-8 text-soft">
           {project.short_description}
         </p>
       )}
 
-      <div className="flex items-center gap-4 mb-8">
-        {project.github_url && (
-          <Link
-            href={project.github_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-md text-sm hover:bg-neutral-50 dark:hover:bg-neutral-900 transition"
-          >
-            GitHub
-          </Link>
-        )}
-        {project.live_url && (
-          <Link
-            href={project.live_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md text-sm hover:opacity-90 transition"
-          >
-            <ExternalLink className="w-4 h-4" />
-            Live Demo
-          </Link>
-        )}
-      </div>
+      {(githubHref || liveHref) && (
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          {githubHref && (
+            <Link
+              href={githubHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-md border border-line bg-card px-4 py-2 text-sm font-medium text-ink transition hover:border-sec-projects"
+            >
+              <FaGithub className="h-4 w-4" />
+              GitHub
+            </Link>
+          )}
+          {liveHref && (
+            <Link
+              href={liveHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Live demo
+            </Link>
+          )}
+        </div>
+      )}
 
-      {project.technologies.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-8">
-          {project.technologies.map((tech: string) => (
+      {technologies.length > 0 && (
+        <div className="mt-8 flex flex-wrap gap-2">
+          {technologies.map((tech) => (
             <span
               key={tech}
-              className="text-xs px-3 py-1 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 rounded-full"
+              className="rounded-full border border-line px-3 py-1 text-xs text-soft"
             >
               {tech}
             </span>
@@ -93,9 +96,25 @@ export default async function ProjectDetailPage(props: {
         </div>
       )}
 
+      {project.image_url && (
+        <div className="relative mt-10 h-64 w-full overflow-hidden rounded-2xl border border-line bg-card sm:h-96">
+          <Image
+            src={project.image_url}
+            alt={project.title}
+            fill
+            sizes="(min-width: 896px) 896px, 100vw"
+            className="object-cover"
+            priority
+          />
+        </div>
+      )}
+
       {project.description && (
-        <div className="prose prose-neutral dark:prose-invert max-w-none">
-          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line">
+        <div className="mt-10 rounded-2xl border border-line bg-card p-6 sm:p-8">
+          <p className="font-code text-xs uppercase tracking-widest text-sec-projects mb-4">
+            About this project
+          </p>
+          <p className="whitespace-pre-line text-[16px] leading-8 text-soft">
             {project.description}
           </p>
         </div>
