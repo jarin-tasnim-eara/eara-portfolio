@@ -1,10 +1,8 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
-import ShowMoreGrid from "@/components/ui/ShowMoreGrid";
+import Slider from "@/components/ui/Slider";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { normalizeUrl } from "@/lib/url";
 
 type CertificationItem = {
@@ -93,27 +91,13 @@ export default function Certifications(props: {
   });
 
   return (
-    <section id="certifications" className="max-w-6xl mx-auto px-6 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-10"
-      >
-        <p className="font-code text-xs tracking-widest text-sec-awards mb-3">
-         CERTIFICATIONS
-        </p>
-        <h2 className="font-heading text-3xl font-bold text-ink">
-          Certifications &amp; Achievements
-        </h2>
-        <div className="mt-3 h-1 w-10 rounded-full bg-sec-awards" />
-      </motion.div>
+    <section id="certifications" className="mx-auto max-w-6xl px-6 py-20">
+      <SectionHeading title="Certifications" barClass="bg-sec-awards" />
 
-      <ShowMoreGrid
+      <Slider
         items={items}
-        gridClassName="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
-        buttonClassName="rounded-full border border-sec-awards bg-card px-6 py-2.5 text-sm font-medium text-ink transition hover:bg-sec-awards hover:text-white"
+        dotClass="bg-sec-awards"
+        label="Certifications"
       />
     </section>
   );

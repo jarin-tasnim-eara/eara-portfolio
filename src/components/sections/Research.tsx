@@ -2,29 +2,11 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import { FileText, Award } from "lucide-react";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { normalizeUrl } from "@/lib/url";
-
-type ResearchItem = {
-  id: string;
-  title: string;
-  description: string | null;
-  publication_type: string | null;
-  conference: string | null;
-  publication_date: string | null;
-  authors: string | null;
-  paper_url: string | null;
-  certificate_url: string | null;
-  image_url: string | null;
-  featured: boolean | null;
-};
-
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
-}
+import { formatYear, shortAuthors, venueFor } from "@/lib/research";
+import type { ResearchItem } from "@/lib/research";
 
 export default function Research(props: { research: ResearchItem[] }) {
   const research = props.research;
@@ -32,36 +14,18 @@ export default function Research(props: { research: ResearchItem[] }) {
   if (research.length === 0) return null;
 
   return (
-    <section id="research" className="max-w-4xl mx-auto px-6 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-10"
-      >
-        <p className="font-code text-xs tracking-widest text-sec-research mb-3">
-          RESEARCH
-        </p>
-        <h2 className="font-heading text-3xl font-bold text-ink">
-          Research &amp; Publications
-        </h2>
-        <div className="mt-3 h-1 w-10 rounded-full bg-sec-research" />
-      </motion.div>
+    <section id="research" className="mx-auto max-w-6xl px-6 py-20">
+      <SectionHeading title="Research" barClass="bg-sec-research" />
 
-      <div className="space-y-6">
+      <div className="space-y-5">
         {research.map((item, index) => {
           const paperHref = normalizeUrl(item.paper_url);
           const certificateHref = normalizeUrl(item.certificate_url);
+          const venue = venueFor(item);
+          const authors = shortAuthors(item.authors, 3);
           const cardClass = item.featured
-            ? "overflow-hidden rounded-xl border border-sec-research bg-card transition"
-            : "overflow-hidden rounded-xl border border-line bg-card transition hover:border-sec-research";
-          const meta = [item.publication_type, item.conference]
-            .filter(Boolean)
-            .join(" · ");
-          const byline = [formatDate(item.publication_date), item.authors]
-            .filter(Boolean)
-            .join(" · ");
+            ? "grid gap-4 rounded-xl border border-sec-research bg-card p-6 transition md:grid-cols-[7rem_1fr_auto] md:items-center md:gap-6"
+            : "grid gap-4 rounded-xl border border-line bg-card p-6 transition hover:border-sec-research md:grid-cols-[7rem_1fr_auto] md:items-center md:gap-6";
 
           return (
             <motion.div
@@ -72,41 +36,22 @@ export default function Research(props: { research: ResearchItem[] }) {
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className={cardClass}
             >
-              {item.image_url && (
-                <div className="relative h-52 w-full bg-page">
-                  <Image
-                    src={item.image_url}
-                    alt={item.title}
-                    fill
-                    sizes="(min-width: 896px) 896px, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              )}
+              <p className="font-code text-sm text-sec-research">
+                {formatYear(item.publication_date)}
+              </p>
 
-              <div className="p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-heading text-lg font-bold text-ink">
-                    {item.title}
-                  </h3>
-                  {item.featured && (
-                    <span className="shrink-0 rounded-full border border-sec-research px-2.5 py-0.5 font-code text-[10px] uppercase tracking-wider text-sec-research">
-                      Featured
-                    </span>
-                  )}
-                </div>
+              <div className="min-w-0">
+                <h3 className="font-heading text-lg font-bold leading-snug text-ink">
+                  {item.title}
+                </h3>
 
-                {meta && <p className="mt-2 text-sm text-sec-research">{meta}</p>}
-                {byline && <p className="mt-1 text-xs text-soft">{byline}</p>}
-
-                {item.description && (
-                  <p className="mt-4 text-[15px] leading-7 text-soft">
-                    {item.description}
-                  </p>
+                {venue && <p className="mt-2 text-sm text-soft">{venue}</p>}
+                {authors && (
+                  <p className="mt-1 text-xs text-soft">{authors}</p>
                 )}
 
                 {(paperHref || certificateHref) && (
-                  <div className="mt-5 flex flex-wrap items-center gap-5">
+                  <div className="mt-4 flex flex-wrap items-center gap-5">
                     {paperHref && (
                       <Link
                         href={paperHref}
@@ -132,6 +77,13 @@ export default function Research(props: { research: ResearchItem[] }) {
                   </div>
                 )}
               </div>
+
+              <Link
+                href={"/research/" + item.id}
+                className="justify-self-start rounded-md border border-sec-research px-4 py-2 text-sm font-medium text-sec-research transition hover:bg-sec-research hover:text-white md:justify-self-end"
+              >
+                Explore →
+              </Link>
             </motion.div>
           );
         })}

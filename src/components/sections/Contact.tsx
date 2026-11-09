@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Copy, Check } from "lucide-react";
 import SocialIcons from "@/components/ui/SocialIcons";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 type ContactProps = {
   email: string | null;
@@ -14,9 +15,6 @@ type ContactProps = {
   googleScholarUrl: string | null;
   researchgateUrl: string | null;
 };
-
-const outlineClass =
-  "rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-sec-about";
 
 export default function Contact(props: ContactProps) {
   const {
@@ -52,14 +50,15 @@ export default function Contact(props: ContactProps) {
     return null;
   }
 
-  const mailtoHref = email ? "mailto:" + email : "";
   const gmailHref = email
     ? "https://mail.google.com/mail/?view=cm&fs=1&to=" +
       encodeURIComponent(email)
     : "";
 
   return (
-    <section id="contact" className="max-w-4xl mx-auto px-6 py-20">
+    <section id="contact" className="mx-auto max-w-6xl px-6 py-20">
+      <SectionHeading title="Contact" barClass="bg-sec-about" />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -67,14 +66,7 @@ export default function Contact(props: ContactProps) {
         transition={{ duration: 0.5 }}
         className="rounded-2xl border border-line bg-card p-8 text-center sm:p-12"
       >
-        <p className="font-code text-xs tracking-widest text-sec-about mb-3">
-          CONTACT
-        </p>
-        <h2 className="font-heading text-3xl font-bold text-ink">
-          Get in touch
-        </h2>
-        <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-sec-about" />
-        <p className="mx-auto mt-6 max-w-md text-soft">
+        <p className="mx-auto max-w-md text-soft">
           Have a question or an opportunity in mind? Feel free to reach out.
         </p>
 
@@ -100,12 +92,9 @@ export default function Contact(props: ContactProps) {
                 href={gmailHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={outlineClass}
+                className="rounded-md border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-sec-about"
               >
                 Open in Gmail
-              </Link>
-              <Link href={mailtoHref} className={outlineClass}>
-                Email app
               </Link>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { normalizeUrl } from "@/lib/url";
 import Hero from "@/components/sections/Hero";
+import Stats from "@/components/sections/Stats";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
@@ -90,23 +91,35 @@ export default async function Home() {
 
   return (
     <main>
-      <Hero
-        fullName={profile ? profile.full_name : "Your Name"}
-        title={profile ? profile.title : "Software Developer"}
-        shortIntro={profile ? profile.short_intro : null}
-        profileImageUrl={profile ? profile.profile_image_url : null}
-        githubUrl={githubUrl}
-        linkedinUrl={linkedinUrl}
-        googleScholarUrl={googleScholarUrl}
-        researchgateUrl={researchgateUrl}
-        resumeUrl={resumeUrl}
-      />
+     <Hero
+  fullName={profile ? profile.full_name : "Your Name"}
+  title={profile ? profile.title : "Software Developer"}
+  shortIntro={profile ? profile.short_intro : null}
+  profileImageUrl={profile ? profile.profile_image_url : null}
+  githubUrl={githubUrl}
+  linkedinUrl={linkedinUrl}
+  googleScholarUrl={googleScholarUrl}
+  researchgateUrl={researchgateUrl}
+  resumeUrl={resumeUrl}
+  availabilityText={profile ? profile.availability_text : null}
+  showAvailability={profile ? profile.show_availability === true : false}
+/>
      
+<Stats
+  projects={projects ? projects.length : 0}
+  skills={skills ? skills.length : 0}
+  research={research ? research.length : 0}
+  certifications={certifications ? certifications.length : 0}
+/>
+
       <About
-        aboutText={profile ? profile.about_text : null}
-        currentFocus={profile ? profile.current_focus : null}
-        careerDirection={profile ? profile.career_direction : null}
-      />
+  aboutText={profile ? profile.about_text : null}
+  currentFocus={profile ? profile.current_focus : null}
+  careerDirection={profile ? profile.career_direction : null}
+  currentlyLearning={
+    profile && profile.currently_learning ? profile.currently_learning : []
+  }
+/>
       <Skills skills={skills ? skills : []} />
       <Projects projects={projects ? projects : []} />
       <Experience experiences={experiences ? experiences : []} />

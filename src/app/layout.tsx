@@ -66,6 +66,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <AuroraBackground />
           <Navbar
+          fullName={profile ? profile.full_name : null}
             githubUrl={githubUrl}
             linkedinUrl={linkedinUrl}
             resumeUrl={resumeUrl}

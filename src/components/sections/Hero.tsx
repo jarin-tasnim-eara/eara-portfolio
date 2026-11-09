@@ -15,6 +15,8 @@ type HeroProps = {
   googleScholarUrl: string | null;
   researchgateUrl: string | null;
   resumeUrl: string | null;
+  availabilityText: string | null;
+  showAvailability: boolean;
 };
 
 export default function Hero(props: HeroProps) {
@@ -28,6 +30,8 @@ export default function Hero(props: HeroProps) {
     googleScholarUrl,
     researchgateUrl,
     resumeUrl,
+    availabilityText,
+    showAvailability,
   } = props;
 
   const reduceMotion = useReducedMotion();
@@ -42,24 +46,31 @@ export default function Hero(props: HeroProps) {
   const floatAnimation = reduceMotion ? { y: 0 } : { y: [0, -12, 0] };
   const spinAnimation = reduceMotion ? { rotate: 0 } : { rotate: 360 };
 
+  const statusVisible =
+    showAvailability && availabilityText && availabilityText.trim().length > 0;
+
   return (
-    <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 min-h-[calc(100vh-5rem)] flex items-center">
-      <div className="grid w-full items-center gap-12 md:grid-cols-[1.2fr_0.8fr]">
-        <div>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-code text-xs tracking-widest text-sec-skills mb-4"
-          >
-            HELLO, I&apos;M
-          </motion.p>
+    <section className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center px-6 pb-12 pt-14 md:pt-24">
+      <div className="grid w-full items-center gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-12">
+        <div className="order-2">
+          {statusVisible && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-3.5 py-1.5 text-[13px] font-medium text-emerald-700 dark:text-emerald-300"
+            >
+              <span className="status-dot" />
+              {availabilityText}
+            </motion.div>
+          )}
 
           <motion.h1
+            id="hero-name"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="font-heading text-5xl md:text-7xl font-bold leading-[1.05] text-ink"
+            className="font-heading text-4xl font-bold leading-[1.05] text-ink sm:text-5xl md:text-7xl"
           >
             {fullName}
           </motion.h1>
@@ -68,7 +79,7 @@ export default function Hero(props: HeroProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-5 font-heading text-lg md:text-xl text-sec-projects"
+            className="mt-5 font-heading text-lg text-sec-projects md:text-xl"
           >
             {title}
           </motion.p>
@@ -133,20 +144,20 @@ export default function Hero(props: HeroProps) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mx-auto"
+          className="order-1 mx-auto md:mx-0"
         >
           <motion.div
             animate={floatAnimation}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="relative h-64 w-64 md:h-80 md:w-80"
+            className="relative h-56 w-56 sm:h-64 sm:w-64 md:h-80 md:w-80"
           >
             <motion.div
               aria-hidden="true"
               animate={spinAnimation}
               transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-              className="absolute -inset-6 rounded-full border border-dashed border-sec-skills opacity-40"
+              className="absolute -inset-4 rounded-full border border-dashed border-sec-skills opacity-40 md:-inset-6"
             />
-            <div className="absolute -inset-3 rounded-full border border-sec-projects opacity-40" />
+            <div className="absolute -inset-2 rounded-full border border-sec-projects opacity-40 md:-inset-3" />
             <div className="relative h-full w-full overflow-hidden rounded-full border border-line bg-card">
               {profileImageUrl ? (
                 <Image

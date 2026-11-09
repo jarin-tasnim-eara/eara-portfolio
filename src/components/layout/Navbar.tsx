@@ -15,10 +15,10 @@ const NAV_LINKS = [
   { label: "Education", id: "education" },
   { label: "Research", id: "research" },
   { label: "Certifications", id: "certifications" },
-  { label: "Contact", id: "contact" },
 ];
 
 type NavbarProps = {
+  fullName?: string | null;
   githubUrl?: string | null;
   linkedinUrl?: string | null;
   resumeUrl?: string | null;
@@ -27,17 +27,52 @@ type NavbarProps = {
 const iconClass =
   "flex h-9 w-9 items-center justify-center rounded-full border border-line text-soft transition hover:border-sec-skills hover:text-ink";
 
+function monogramFor(fullName: string | null | undefined): string {
+  if (!fullName) return "J";
+  const words = fullName.split(" ").filter(Boolean).slice(0, 3);
+  const letters = words.map((word) => word.charAt(0).toUpperCase()).join("");
+  return letters.length > 0 ? letters : "J";
+}
+
 export default function Navbar(props: NavbarProps) {
-  const { githubUrl, linkedinUrl, resumeUrl } = props;
+  const { fullName, githubUrl, linkedinUrl, resumeUrl } = props;
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeId, setActiveId] = useState("");
+  const [showName, setShowName] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (pathname !== "/") {
+      setShowName(true);
+      return;
+    }
+
+    const target = document.getElementById("hero-name");
+
+    if (!target) {
+      setShowName(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setShowName(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+        });
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname !== "/") {
@@ -78,11 +113,21 @@ export default function Navbar(props: NavbarProps) {
 
   if (pathname && pathname.startsWith("/admin")) return null;
 
+  const nameClass = showName
+    ? "hidden max-w-[220px] overflow-hidden whitespace-nowrap font-heading text-sm font-bold text-ink opacity-100 transition-all duration-300 sm:block"
+    : "hidden max-w-0 overflow-hidden whitespace-nowrap font-heading text-sm font-bold text-ink opacity-0 transition-all duration-300 sm:block";
+
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-page/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
-        <Link href="/" className="font-heading text-xl font-bold text-ink">
-          Eara
+        <Link href="/" className="flex items-center gap-3" aria-label="Home">
+          <span
+            className="flex h-9 w-9 items-center justify-center rounded-lg font-heading text-xs font-bold text-white"
+            style={{ background: "linear-gradient(135deg, #7c5cff, #22d3ee)" }}
+          >
+            {monogramFor(fullName)}
+          </span>
+          <span className={nameClass}>{fullName}</span>
         </Link>
 
         <nav className="hidden items-center gap-6 xl:flex">
@@ -147,11 +192,18 @@ export default function Navbar(props: NavbarProps) {
               href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500"
+              className="px-1 text-sm font-medium text-soft transition hover:text-ink"
             >
-              Resume
+              CV
             </Link>
           )}
+
+          <Link
+            href="/#contact"
+            className="rounded-full bg-violet-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-violet-500"
+          >
+            Let&apos;s talk
+          </Link>
         </div>
 
         <div className="flex items-center gap-3 xl:hidden">
@@ -205,7 +257,7 @@ export default function Navbar(props: NavbarProps) {
               );
             })}
 
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               {githubUrl && (
                 <Link
                   href={githubUrl}
@@ -233,11 +285,18 @@ export default function Navbar(props: NavbarProps) {
                   href={resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white"
+                  className="px-1 text-sm font-medium text-soft"
                 >
-                  Resume
+                  CV
                 </Link>
               )}
+              <Link
+                href="/#contact"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-full bg-violet-600 px-5 py-2 text-sm font-medium text-white"
+              >
+                Let&apos;s talk
+              </Link>
             </div>
           </div>
         </div>

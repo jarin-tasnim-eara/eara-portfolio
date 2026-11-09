@@ -1,10 +1,8 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
 import ProjectCard from "@/components/sections/ProjectCard";
 import type { ProjectItem } from "@/components/sections/ProjectCard";
-import ShowMoreGrid from "@/components/ui/ShowMoreGrid";
+import Slider from "@/components/ui/Slider";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function Projects(props: { projects: ProjectItem[] }) {
   const projects = props.projects;
@@ -16,37 +14,19 @@ export default function Projects(props: { projects: ProjectItem[] }) {
   ));
 
   return (
-    <section id="projects" className="max-w-6xl mx-auto px-6 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-10"
-      >
-        <p className="font-code text-xs tracking-widest text-sec-projects mb-3">
-          PROJECTS
-        </p>
-        <h2 className="font-heading text-3xl font-bold text-ink">Projects</h2>
-        <div className="mt-3 h-1 w-10 rounded-full bg-sec-projects" />
-      </motion.div>
+    <section id="projects" className="mx-auto max-w-6xl px-6 py-20">
+      <SectionHeading title="Projects" barClass="bg-sec-projects" />
 
-      <ShowMoreGrid
-        items={items}
-        gridClassName="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        buttonClassName="rounded-full border border-sec-projects bg-card px-6 py-2.5 text-sm font-medium text-ink transition hover:bg-sec-projects hover:text-white"
-      />
+      <Slider items={items} dotClass="bg-sec-projects" label="Projects" />
 
-      {projects.length > 3 && (
-        <div className="mt-6 text-center">
-          <Link
-            href="/projects"
-            className="text-sm text-soft transition hover:text-ink"
-          >
-            View all projects →
-          </Link>
-        </div>
-      )}
+      <div className="mt-8 text-center">
+        <Link
+          href="/projects"
+          className="inline-block rounded-full border border-sec-projects px-6 py-2.5 text-sm font-medium text-ink transition hover:bg-sec-projects hover:text-white"
+        >
+          View all projects →
+        </Link>
+      </div>
     </section>
   );
 }

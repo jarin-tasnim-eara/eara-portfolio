@@ -1,80 +1,35 @@
-
-import Link from "next/link";
 import { createClient } from "@/lib/supabase-server";
-import { Plus, Pencil } from "lucide-react";
-import DeleteButton from "@/components/admin/DeleteButton";
+import SortableList from "@/components/admin/SortableList";
 
 export default async function AdminSkillsPage() {
   const supabase = await createClient();
 
-  const { data: skills, error } = await supabase
+  const result = await supabase
     .from("skills")
     .select("*")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
 
-  if (error) {
-    console.error("Skills fetch error:", error.message);
-  }
+  const rows = result.data ? result.data : [];
+
+  const items = rows.map((row) => ({
+    id: row.id,
+    title: row.name,
+    subtitle:
+      (row.category ? row.category : "") + (row.is_core ? " · Core" : ""),
+    starred: row.is_core === true,
+  }));
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-10">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-neutral-900">
-          Skills
-        </h1>
-
-        <Link
-          href="/admin/skills/new"
-          className="flex items-center gap-2 bg-neutral-900 text-white px-4 py-2 rounded-md text-sm hover:bg-neutral-700 transition"
-        >
-          <Plus className="w-4 h-4" />
-          New Skill
-        </Link>
-      </div>
-
-      {!skills || skills.length === 0 ? (
-        <p className="text-neutral-400 text-sm">
-          No skills added yet.
-        </p>
-      ) : (
-        <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
-          {skills.map((skill, index) => (
-            <div
-              key={skill.id}
-              className={`flex items-center justify-between px-5 py-4 ${
-                index !== skills.length - 1
-                  ? "border-b border-neutral-200"
-                  : ""
-              }`}
-            >
-              <div className="min-w-0">
-                <p className="font-medium text-neutral-900">
-                  <span className="text-neutral-400 mr-2">
-                    #{skill.sort_order ?? 0}
-                  </span>
-                  {skill.name}
-                </p>
-
-                <p className="text-xs text-neutral-400">
-                  {skill.category}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <Link
-                  href={`/admin/skills/${skill.id}/edit`}
-                  className="p-2 rounded-md text-neutral-500 hover:bg-neutral-100 transition"
-                >
-                  <Pencil className="w-4 h-4" />
-                </Link>
-
-                <DeleteButton table="skills" id={skill.id} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <SortableList
+        heading="Skills"
+        table="skills"
+        basePath="/admin/skills"
+        newLabel="New Skill"
+        emptyText="No skills added yet."
+        items={items}
+      />
     </main>
   );
 }

@@ -3,7 +3,7 @@
 import { motion, MotionConfig } from "framer-motion";
 import Link from "next/link";
 import SkillLogo from "@/components/ui/SkillLogo";
-import { groupSkills } from "@/lib/skills";
+import SectionHeading from "@/components/ui/SectionHeading";
 import type { SkillItem } from "@/lib/skills";
 
 export default function Skills(props: { skills: SkillItem[] }) {
@@ -13,26 +13,11 @@ export default function Skills(props: { skills: SkillItem[] }) {
 
   const flagged = skills.filter((skill) => skill.is_core === true);
   const coreSkills = flagged.length > 0 ? flagged : skills.slice(0, 9);
-  const groups = groupSkills(skills);
 
   return (
     <MotionConfig reducedMotion="user">
-      <section id="skills" className="max-w-6xl mx-auto px-6 py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-10"
-        >
-          <p className="font-code text-xs tracking-widest text-sec-skills mb-3">
-            SKILLS
-          </p>
-          <h2 className="font-heading text-3xl font-bold text-ink">
-            Skills &amp; Tools
-          </h2>
-          <div className="mt-3 h-1 w-10 rounded-full bg-sec-skills" />
-        </motion.div>
+      <section id="skills" className="mx-auto max-w-6xl px-6 py-20">
+        <SectionHeading title="Skills" barClass="bg-sec-skills" />
 
         <div className="mb-6 flex items-center gap-4">
           <p className="font-code text-xs uppercase tracking-widest text-soft">
@@ -61,40 +46,14 @@ export default function Skills(props: { skills: SkillItem[] }) {
           ))}
         </div>
 
-        <div className="mb-6 mt-14 flex items-center gap-4">
-          <p className="font-code text-xs uppercase tracking-widest text-soft">
-            Browse by category
-          </p>
-          <div className="h-px flex-1 bg-line" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-wrap items-center gap-3"
-        >
-          {groups.map((group) => (
-            <Link
-              key={group.slug}
-              href={"/skills#" + group.slug}
-              className="rounded-full border border-line bg-card px-4 py-2 text-sm text-ink transition hover:-translate-y-0.5 hover:border-sec-skills"
-            >
-              {group.name}
-              <span className="ml-2 font-code text-xs text-soft">
-                {group.items.length}
-              </span>
-            </Link>
-          ))}
-
+        <div className="mt-10">
           <Link
             href="/skills"
-            className="px-3 py-2 text-sm font-medium text-sec-skills hover:underline"
+            className="inline-block rounded-full border border-sec-skills px-6 py-2.5 text-sm font-medium text-ink transition hover:bg-sec-skills hover:text-page"
           >
             View all skills →
           </Link>
-        </motion.div>
+        </div>
       </section>
     </MotionConfig>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 type ExperienceItem = {
   id: string;
@@ -26,24 +27,10 @@ export default function Experience(props: { experiences: ExperienceItem[] }) {
   if (experiences.length === 0) return null;
 
   return (
-    <section id="experience" className="max-w-4xl mx-auto px-6 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-10"
-      >
-        <p className="font-code text-xs tracking-widest text-sec-experience mb-3">
-          EXPERIENCE
-        </p>
-        <h2 className="font-heading text-3xl font-bold text-ink">
-          Experience
-        </h2>
-        <div className="mt-3 h-1 w-10 rounded-full bg-sec-experience" />
-      </motion.div>
+    <section id="experience" className="mx-auto max-w-6xl px-6 py-20">
+      <SectionHeading title="Experience" barClass="bg-sec-experience" />
 
-      <div className="space-y-10 border-l border-line pl-8">
+      <div className="max-w-4xl space-y-10 border-l border-line pl-8">
         {experiences.map((exp, index) => {
           const technologies = exp.technologies ? exp.technologies : [];
           const startLabel = formatDate(exp.start_date);

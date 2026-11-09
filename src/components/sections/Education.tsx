@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 type EducationItem = {
   id: string;
@@ -33,22 +34,10 @@ export default function Education(props: { education: EducationItem[] }) {
   if (education.length === 0) return null;
 
   return (
-    <section id="education" className="max-w-4xl mx-auto px-6 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-10"
-      >
-        <p className="font-code text-xs tracking-widest text-sec-education mb-3">
-          EDUCATION
-        </p>
-        <h2 className="font-heading text-3xl font-bold text-ink">Education</h2>
-        <div className="mt-3 h-1 w-10 rounded-full bg-sec-education" />
-      </motion.div>
+    <section id="education" className="mx-auto max-w-6xl px-6 py-20">
+      <SectionHeading title="Education" barClass="bg-sec-education" />
 
-      <div className="space-y-5">
+      <div className="max-w-4xl space-y-5">
         {education.map((edu, index) => (
           <motion.div
             key={edu.id}
