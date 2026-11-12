@@ -50,7 +50,7 @@ export default function Hero(props: HeroProps) {
     showAvailability && availabilityText && availabilityText.trim().length > 0;
 
   return (
-    <section className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center px-6 pb-12 pt-14 md:pt-24">
+    <section className="mx-auto flex max-w-6xl items-center px-6 pb-10 pt-14 md:pt-20 lg:min-h-[calc(85vh-5rem)]">
       <div className="grid w-full items-center gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-12">
         <div className="order-2">
           {statusVisible && (

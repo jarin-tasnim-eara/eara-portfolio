@@ -46,7 +46,7 @@ export default function Skills(props: { skills: SkillItem[] }) {
           ))}
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 flex justify-center">
           <Link
             href="/skills"
             className="inline-block rounded-full border border-sec-skills px-6 py-2.5 text-sm font-medium text-ink transition hover:bg-sec-skills hover:text-page"

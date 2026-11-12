@@ -5,8 +5,7 @@ import Stats from "@/components/sections/Stats";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
-import Experience from "@/components/sections/Experience";
-import Education from "@/components/sections/Education";
+import ExperienceEducation from "@/components/sections/ExperienceEducation";
 import Research from "@/components/sections/Research";
 import Certifications from "@/components/sections/Certifications";
 import Contact from "@/components/sections/Contact";
@@ -122,8 +121,10 @@ export default async function Home() {
 />
       <Skills skills={skills ? skills : []} />
       <Projects projects={projects ? projects : []} />
-      <Experience experiences={experiences ? experiences : []} />
-      <Education education={education ? education : []} />
+     <ExperienceEducation
+  experiences={experiences ? experiences : []}
+  education={education ? education : []}
+/>
       <Research research={research ? research : []} />
       <Certifications certifications={certifications ? certifications : []} />
       <Contact

@@ -40,8 +40,8 @@ export default async function RootLayout({
   const supabase = await createClient();
   const result = await supabase
     .from("profile")
-    .select(
-      "full_name, github_url, linkedin_url, resume_url, google_scholar_url, researchgate_url"
+        .select(
+      "full_name, title, github_url, linkedin_url, resume_url, google_scholar_url, researchgate_url"
     )
     .limit(1)
     .maybeSingle();
@@ -72,12 +72,9 @@ export default async function RootLayout({
             resumeUrl={resumeUrl}
           />
           {children}
-          <Footer
+                    <Footer
             fullName={profile ? profile.full_name : null}
-            githubUrl={githubUrl}
-            linkedinUrl={linkedinUrl}
-            googleScholarUrl={googleScholarUrl}
-            researchgateUrl={researchgateUrl}
+            title={profile ? profile.title : null}
           />
         </ThemeProvider>
       </body>

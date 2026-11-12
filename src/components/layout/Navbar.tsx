@@ -40,7 +40,7 @@ export default function Navbar(props: NavbarProps) {
   const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [activeId, setActiveId] = useState("");
+  const [activeIds, setActiveIds] = useState<string[]>([]);
   const [showName, setShowName] = useState(false);
 
   useEffect(() => {
@@ -76,9 +76,11 @@ export default function Navbar(props: NavbarProps) {
 
   useEffect(() => {
     if (pathname !== "/") {
-      setActiveId("");
+      setActiveIds([]);
       return;
     }
+
+    const visible = new Set<string>();
 
     const elements = NAV_LINKS.map((link) =>
       document.getElementById(link.id)
@@ -88,9 +90,20 @@ export default function Navbar(props: NavbarProps) {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
+            visible.add(entry.target.id);
+          } else {
+            visible.delete(entry.target.id);
           }
         });
+
+        const group = new Set(visible);
+
+        if (group.has("experience") || group.has("education")) {
+          group.add("experience");
+          group.add("education");
+        }
+
+        setActiveIds(Array.from(group));
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
@@ -99,7 +112,8 @@ export default function Navbar(props: NavbarProps) {
 
     function onScroll() {
       if (window.scrollY < 200) {
-        setActiveId("");
+        visible.clear();
+        setActiveIds([]);
       }
     }
 
@@ -114,15 +128,19 @@ export default function Navbar(props: NavbarProps) {
   if (pathname && pathname.startsWith("/admin")) return null;
 
   const nameClass = showName
-    ? "hidden max-w-[220px] overflow-hidden whitespace-nowrap font-heading text-sm font-bold text-ink opacity-100 transition-all duration-300 sm:block"
-    : "hidden max-w-0 overflow-hidden whitespace-nowrap font-heading text-sm font-bold text-ink opacity-0 transition-all duration-300 sm:block";
+    ? "block max-w-[220px] overflow-hidden whitespace-nowrap font-heading text-sm font-bold text-ink opacity-100 transition-all duration-300"
+    : "block max-w-0 overflow-hidden whitespace-nowrap font-heading text-sm font-bold text-ink opacity-0 transition-all duration-300";
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-page/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
-        <Link href="/" className="flex items-center gap-3" aria-label="Home">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+        <Link
+          href="/"
+          className="flex min-w-0 items-center gap-3"
+          aria-label="Home"
+        >
           <span
-            className="flex h-9 w-9 items-center justify-center rounded-lg font-heading text-xs font-bold text-white"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-heading text-xs font-bold text-white"
             style={{ background: "linear-gradient(135deg, #7c5cff, #22d3ee)" }}
           >
             {monogramFor(fullName)}
@@ -132,7 +150,7 @@ export default function Navbar(props: NavbarProps) {
 
         <nav className="hidden items-center gap-6 xl:flex">
           {NAV_LINKS.map((link) => {
-            const isActive = activeId === link.id;
+            const isActive = activeIds.includes(link.id);
             const linkClass = isActive
               ? "relative text-sm text-ink transition"
               : "relative text-sm text-soft transition hover:text-ink";
@@ -206,7 +224,7 @@ export default function Navbar(props: NavbarProps) {
           </Link>
         </div>
 
-        <div className="flex items-center gap-3 xl:hidden">
+        <div className="flex shrink-0 items-center gap-3 xl:hidden">
           {mounted && (
             <button
               type="button"
@@ -240,7 +258,7 @@ export default function Navbar(props: NavbarProps) {
         <div className="border-t border-line bg-page px-6 py-5 xl:hidden">
           <div className="flex flex-col gap-4">
             {NAV_LINKS.map((link) => {
-              const isActive = activeId === link.id;
+              const isActive = activeIds.includes(link.id);
               const linkClass = isActive
                 ? "text-sm font-medium text-sec-skills"
                 : "text-sm text-soft";

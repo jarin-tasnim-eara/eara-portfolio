@@ -12,6 +12,8 @@ type EducationFormData = {
   location: string;
   start_date: string;
   end_date: string;
+  major: string;
+  minor: string;
   result: string;
   description: string;
   sort_order: number;
@@ -31,6 +33,8 @@ export default function EducationForm({
     location: initialData?.location ?? "",
     start_date: initialData?.start_date ?? "",
     end_date: initialData?.end_date ?? "",
+    major: initialData?.major ?? "",
+    minor: initialData?.minor ?? "",
     result: initialData?.result ?? "",
     description: initialData?.description ?? "",
     sort_order: initialData?.sort_order ?? 0,
@@ -57,6 +61,8 @@ export default function EducationForm({
       ...form,
       start_date: form.start_date || null,
       end_date: form.end_date || null,
+      major: form.major || null,
+      minor: form.minor || null,
     };
 
     if (isEditMode && initialData?.id) {
@@ -135,6 +141,25 @@ export default function EducationForm({
         </Field>
       </div>
 
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Major (optional)">
+          <input
+            value={form.major}
+            onChange={(e) => updateField("major", e.target.value)}
+            placeholder="e.g. Data Science"
+            className="input"
+          />
+        </Field>
+        <Field label="Minor (optional)">
+          <input
+            value={form.minor}
+            onChange={(e) => updateField("minor", e.target.value)}
+            placeholder="e.g. Business Administration"
+            className="input"
+          />
+        </Field>
+      </div>
+
       <Field label="Result">
         <input
           value={form.result}
@@ -153,7 +178,7 @@ export default function EducationForm({
         />
       </Field>
 
-      <Field label="Sort Order">
+      <Field label="Display Order (small number shows first)">
         <input
           type="number"
           value={form.sort_order}
